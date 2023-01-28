@@ -25,3 +25,7 @@
 ![](./shoot/user.png)
 
 ![](./shoot/activity.png)
+
+
+
+![](./shoot/share.png)
