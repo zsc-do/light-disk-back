@@ -42,5 +42,32 @@ namespace lightDiskBack.Controllers.sys
 			return new JsonResult(user);
 		}
 
-	}
+
+        [Authorize]
+        public async Task<JsonResult> changePassword([FromQuery(Name = "password")] String password)
+        {
+
+
+            String userId1 = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            int userId = userId = int.Parse(userId1);
+
+
+            SysUser user =  idDBContext.Users.Single(a => a.Id == userId);
+
+            string token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+            var r = await userManager.ResetPasswordAsync(user, token, password);
+
+            if (!r.Succeeded)
+            {
+                return new JsonResult("500");
+
+            }
+
+            return new JsonResult("ok");
+        }
+
+
+
+    }
 }

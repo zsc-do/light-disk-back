@@ -50,13 +50,13 @@ namespace lightDiskBack.Controllers.login
 			var user = await userManager.FindByNameAsync(userName);
 			if (user == null)
 			{
-				return NotFound($"dsad{userName}");
-			}
+                return new JsonResult("500");
+            }
 			var success = await userManager.CheckPasswordAsync(user, password);
 			if (!success)
 			{
-				return BadRequest("Failed");
-			}
+                return new JsonResult("500");
+            }
 			var claims = new List<Claim>();
 			claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
 			claims.Add(new Claim(ClaimTypes.Name, user.UserName));
@@ -101,6 +101,7 @@ namespace lightDiskBack.Controllers.login
 
 
 			var r = await userManager.CreateAsync(user, password);
+
 
             if (!r.Succeeded)
             {

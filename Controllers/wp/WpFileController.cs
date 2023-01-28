@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using lightDiskBack.Vo;
 
 namespace lightDiskBack.Controllers.wp
 {
@@ -282,6 +283,28 @@ namespace lightDiskBack.Controllers.wp
         }
 
 
+
+        [Authorize]
+        public JsonResult fileDetail([FromQuery(Name = "fileId")] String fileId)
+        {
+
+            String userId1 = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            int userId = userId = int.Parse(userId1);
+
+            WpFile wpFile = idDBContext.wpFile.Single(a => a.fileId == int.Parse(fileId) && a.userId == userId);
+
+
+            DiskFile diskFile = idDBContext.DiskFile.Single(a => a.diskFileId == wpFile.diskFileId);
+
+
+            WpFileVo fileVo = new WpFileVo();
+            fileVo.fileName = wpFile.fileName;
+            fileVo.fileSize = diskFile.diskFileSize;
+
+
+            return new JsonResult(fileVo);
+        }
 
     }
 }
