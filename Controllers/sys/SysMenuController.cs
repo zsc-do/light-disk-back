@@ -28,9 +28,14 @@ namespace lightDiskBack.Controllers.sys
 		}
 
 
+        [Authorize]
 		public async Task<JsonResult> getAuthMenuAsync()
         {
-            var authUser = idDBContext.Users
+
+            String userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+
+            var authUser = idDBContext.Users.Where(a => a.Id == int.Parse(userId))
                  .Include(a => a.Role)
                  .ThenInclude(s => s.SysMenus).ToList().First();
 

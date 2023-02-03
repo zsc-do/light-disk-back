@@ -14,6 +14,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace lightDiskBack.Controllers.login
 {
@@ -23,21 +24,22 @@ namespace lightDiskBack.Controllers.login
 		private readonly UserManager<SysUser> userManager;
 		private readonly IdDBContext idDBContext;
 		private readonly IDistributedCache distCache;
-		public LoginController(RoleManager<SysRole> roleManager, UserManager<SysUser> userManager,
-								IdDBContext idDBContext, IDistributedCache distCache)
+
+
+        
+
+        public LoginController(RoleManager<SysRole> roleManager, UserManager<SysUser> userManager,
+								IdDBContext idDBContext, IDistributedCache distCache
+                                )
 		{
 			this.roleManager = roleManager;
 			this.userManager = userManager;
 			this.idDBContext = idDBContext;
 			this.distCache = distCache;
 
-		}
+        }
 
-		public IActionResult login()
-		{
-			return View("login");
-		}
-
+		
 
 		[HttpPost]
 		public async Task<IActionResult> doLogin([FromBody]LoginRequest req,
@@ -70,7 +72,8 @@ namespace lightDiskBack.Controllers.login
 
 
 
-			return new JsonResult(jwtToken);
+
+            return new JsonResult(jwtToken);
 		}
 
 		private static string BuildToken(IEnumerable<Claim> claims, JWTOptions options)
@@ -102,8 +105,9 @@ namespace lightDiskBack.Controllers.login
 
 			var r = await userManager.CreateAsync(user, password);
 
+            var r2 = await userManager.AddToRoleAsync(user, "user");
 
-            if (!r.Succeeded)
+            if (!r.Succeeded || !r2.Succeeded)
             {
 				return BadRequest(r.Errors);
             }

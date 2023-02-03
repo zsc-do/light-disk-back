@@ -141,9 +141,39 @@ namespace lightDiskBack.Controllers.wp
 
 
             var folder = idDBContext.wpFile.Where(a => a.fileId == int.Parse(id)).Single();
+
+            string oldFolderPath = folder.filePath + folder.fileName + "/";
+            string[] splitPath = oldFolderPath.Split("/");
+            int index = -1;
+
+            for(int i = 0;i < splitPath.Length;i++)
+            {
+                if (splitPath[i].Equals(folder.fileName))
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            var subFolders = idDBContext.wpFile.Where(a => a.filePath.Contains(oldFolderPath)).ToList();
+
+
+            foreach(WpFile wpFile in subFolders)
+            {
+                string[] splitSubPath = wpFile.filePath.Split("/");
+                splitSubPath[index] = newName;
+                string newSubPath = "";
+
+                foreach(string s1 in splitSubPath)
+                {
+                    newSubPath += s1 + "/";
+                }
+
+                wpFile.filePath = newSubPath.Replace("//", "/");
+            }
+
+
             folder.fileName = newName;
-
-
             idDBContext.SaveChanges();
 
             return new JsonResult("");
