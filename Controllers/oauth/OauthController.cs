@@ -39,8 +39,8 @@ namespace lightDiskBack.Controllers.oauth
         public async Task<JsonResult> getTokenAsync([FromQuery(Name = "code")] String code)
         {
 
-            string clientId = "Iv1.919336f5c76c06a2";
-            string client_secret = "9b1c815ee7abb38e0d8616c05aae25981a6249b5";
+            string clientId = "";
+            string client_secret = "";
 
             var httpRequestMessage = new HttpRequestMessage(
                  HttpMethod.Get,
